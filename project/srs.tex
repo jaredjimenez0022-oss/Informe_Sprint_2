@@ -1,0 +1,177 @@
+\chapter{Especificación de requerimientos}
+\section{Pila de producto}
+La plataforma digital para la comunidad de Tejarcillos continúa su desarrollo con el Sprint 2, enfocado en la monetización mediante un sistema de usuarios premium y pagos con PayPal. Para mantener la trazabilidad del sistema, se continúa con la codificación RFXXX (Requerimiento Funcional) y RNFXXX (Requerimiento No Funcional) establecida en el Sprint 1.
+
+
+
+% La pila del producto debe actualizarla cada iteración del proyecto. Debe documentar los cambios sufridos durante la iteración pasada, de forma que se pueda trazar con mucho detalle los cambios que ha sufrido la definición del proyecto desde sus inicios. Si durante el desarrollo cambia alguno de los MVP o la EDT, debe modificarlos también y documentar la razón que justifica el cambio.
+
+\subsection{Requerimientos funcionales del sistema}
+
+%% PILA DE PRODUCTO %%
+\begin{longtable}{|l||p{7cm}|l|l|}
+\multicolumn{4}{c}{Pila general del producto - Sprint 2}\\
+\hline\hline
+\textbf{Código} & \textbf{Descripción} & \textbf{Prioridad} & \textbf{Inserción}\\
+\hline
+\endfirsthead
+\textbf{Código} & \textbf{Descripción} & \textbf{Prioridad} & \textbf{Inserción}\\
+\hline\hline
+\endhead
+
+\textbf{RF011} & 
+\textbf{Corrección de filtro de búsqueda en biblioteca y límite de tamaño de archivos:} Reparar el comportamiento del filtro que mantiene resultados anteriores al borrar el texto de búsqueda, implementando reset adecuado del estado y actualización en tiempo real de los resultados. Solucionar error 413 Request Entity Too Large configurando el servidor para aceptar archivos hasta 100MB y mejorar mensajes de error al usuario. & Alta & Original \\
+
+
+\textbf{RF012} & 
+\textbf{Reparación del sistema de recuperación de contraseña en producción:} Corregir error 504 Gateway Timeout en el endpoint de recuperación, validar configuración de correos en producción y asegurar funcionamiento del flujo completo. & Alta & Original \\
+
+
+\textbf{RF013} & 
+\textbf{Extensión del modelo de usuario con campos premium e implementación de validación de límites de publicaciones:} Incorporar al campo tipoUsuario (3: premium), fechaVencimientoPremium, límitePublicaciones al esquema de usuario existente. Middleware que verifique los límites de publicaciones según tipo de usuario antes de permitir la creación de nuevas publicaciones & Alta & Original \\
+
+
+\textbf{RF014} & 
+\textbf{Configuración de SDK de PayPal en entorno sandbox:} Implementar autenticación y configuración inicial con credenciales de pruebas de PayPal, incluyendo setup de entorno de desarrollo. & Alta & Original \\
+
+
+\textbf{RF015} & 
+\textbf{Webhooks y procesamiento de pagos backend:} Endpoints para recibir confirmaciones de PayPal y actualizar automáticamente el estado del usuario a premium tras pago exitoso. & Alta & Original \\
+
+
+\textbf{RF016} & 
+\textbf{Sistema de reintentos y manejo de errores de pago:} Mecanismos robustos para manejar fallos de conexión, pagos rechazados, timeouts y otros escenarios de error en el flujo de pago. & Alta & Original \\
+
+
+\textbf{RF017} & 
+\textbf{Sistema completo de gestión de sección ``Acerca de`` e incorporación de nuevos campos en BD y Frontend:} Crear modelo en base de datos, API backend con CRUD completo e interfaz frontend interactiva con editor de texto enriquecido para la sección ``Acerca de" , incorporar campos adicionales en publicaciones (precio regular, precio estudiante/ciudadano de oro y enlaces externos), y corregir aspectos de UI/UX como visibilidad de contraseña en móviles y restricción de gestión de roles exclusivamente al rol 0 en el dashboard.& Baja & Original \\
+ 
+
+\textbf{RF018} & 
+\textbf{Sistema de alertas de límites en frontend e integración de las funcionalidades de membresía:} Componente React que muestre alertas cuando usuario básico alcance su límite de publicaciones y ofrezca opción de upgrade a premium.Y componente de checkout que guíe al usuario por el proceso completo de pago PayPal, desde selección de membresía hasta confirmación. & Alta & Original \\ 
+
+\textbf{RF019} & 
+\textbf{Sistema de moderación para ediciones de publicaciones premium:} Permitir a usuarios premium editar o borrar sus publicaciones, con notificación automática a administradores en la sección en panel de admin para revisar y aprobar/eliminar publicaciones actualizadas que puedan contener contenido inapropiado. & Alta & Original \\
+
+
+\textbf{RF020} & 
+\textbf{Pruebas integrales del sistema premium, PayPal y correción de errores:} Validación exhaustiva de todos los flujos del sistema premium e integración PayPal tanto en entorno de desarrollo como producción. Hacer correciones en caso de existir. & Media & Original \\
+
+
+\textbf{RF021} & 
+\textbf{Sistema de notificaciones por correo para moderación de publicaciones:} Implementar envío automático de correos a administradores cuando haya publicaciones pendientes de aprobación y notificaciones a usuarios cuando sus publicaciones sean aprobadas, reutilizando la infraestructura existente de Nodemailer con Zoho. & Media & Original \\
+
+\textbf{RNF003} & 
+\textbf{Manual de usuario:} Documentación completa de las funcionalidades premium y proceso de pago para usuarios finales y administradores. Además, agregar las actualizaciones realizadas en el sistema previo. & Media & Original \\
+
+
+\textbf{RNF004} & 
+\textbf{Manual técnico:} Documentación técnica detallada de la arquitectura del sistema premium, integración PayPal y APIs desarrolladas. Además, agregar las actualizaciones realizadas en el sistema previo. & Media & Original \\
+
+
+\textbf{RNF005} & 
+\textbf{Informe del Sprint 2:} Documentación del proceso de desarrollo. Además agregar las actualizaciones realizadas en el sistema previo. & Media & Original \\
+
+\hline
+\caption{\color{ForestGreen}VERDE: Historias agregadas en esta iteración. \color{Mahogany}ROJO: Historias eliminadas.}
+\label{ProductBacklog}
+\end{longtable}
+
+
+\subsection{Bitácora de cambios}
+Documente en esta sección las decisiones que llevaron a la creación de nuevas historias, o la eliminación de historias ya analizadas. Detalle con cuidado todas las historias afectadas con su respectivo código, indicando por qué razón fue eliminada / agregadas a la pila.
+
+\section{Producto Mínimo Viable del Sprint 2}
+El MVP del Sprint 2 se centra en la monetización de la plataforma mediante la implementación de un sistema de usuarios premium y la integración de pagos con PayPal, además de corregir problemas críticos identificados en el Sprint 1 y agregar una sección informativa sobre la organización.
+
+Este segundo producto mínimo viable se enfoca en las siguientes áreas estratégicas:
+
+
+\begin{itemize}
+
+\item \textbf{Corrección de errores críticos del Sprint 1}: Resolución de problemas identificados en producción, incluyendo el filtro de búsqueda en biblioteca, límites de tamaño de archivos y el sistema de recuperación de contraseñas, mejorando la estabilidad general de la plataforma.
+
+\item \textbf{Sistema de usuarios premium}: Implementación de roles de usuario diferenciados (básico y premium) con límites de publicaciones y funcionalidades exclusivas para usuarios premium, estableciendo las bases para la sostenibilidad económica de la plataforma.
+
+\item \textbf{Integración de PayPal para pagos}: Desarrollo completo del flujo de pago mediante PayPal Sandbox, permitiendo a los usuarios realizar upgrades a membresías premium de manera segura y confiable, con procesamiento automático de transacciones.
+
+
+
+\item \textbf{Sección ``Acerca de`` informativa}: Creación de una sección básica en Frontend que muestre información importante sobre Komuness CR.
+
+\item \textbf{Sistema de límites y alertas}: Implementación de mecanismos que notifiquen a usuarios básicos cuando alcancen sus límites de publicaciones y les ofrezcan la opción de upgrade, creando un flujo natural de conversión a premium.
+
+\item \textbf{Validación de flujos de pago}: Pruebas exhaustivas del proceso completo de monetización, desde la detección de límites hasta la confirmación de pago y actualización automática del estado del usuario.
+\end{itemize}
+
+Al finalizar este sprint, la plataforma contará con un sistema de monetización funcional que permitirá la sostenibilidad a largo plazo, manteniendo el acceso gratuito para usuarios básicos mientras ofrece beneficios adicionales mediante membresías premium, todo ello respaldado por una experiencia de pago segura y confiable mediante PayPal.
+
+\subsection{Pila de trabajo de la iteración 2}
+
+El equipo de desarrollo está compuesto por tres integrantes con dedicación de 12 horas semanales cada uno trabajando durante 4 semanas (20 días hábiles), totalizando 144 horas de capacidad al 100\%. Considerando un factor de productividad del 90\% para imprevistos y reuniones de coordinación, el presupuesto disponible es de 128 horas equivalentes a 32 puntos de historia para el Sprint 1.
+
+\begin{longtable}{|l|l|l|}
+    \hline
+    \textbf{Miembro del equipo} & \textbf{Rol} & \textbf{Capacidad (puntos)} \\
+    \hline
+    Fredrik Aburto Jiménez & Desarrollo Fullstack & 12 \\
+    Angélica Díaz Barrios & Desarrollo Fullstack & 12 \\
+    Andrés Salas Araya & Desarrollo Fullstack & 12 \\
+    \hline\hline
+    \textbf{Presupuesto total (100\%):} & & 36\\
+    \textbf{Presupuesto disponible (90\%):} & & 32\\
+    \textbf{Presupuesto en horas al 90\% (1 punto = 4 horas):} &  & 128\\
+    \hline
+    \caption{Resumen de capacidad de carga del equipo para la iteración 2}
+\end{longtable}
+
+%% PILA DEL SPRINT (ITERACIÓN) %%
+
+%% PILA DEL SPRINT 2 %%
+\begin{longtable}{|l||c|c|p{7cm}|l|}
+\multicolumn{5}{c}{Pila del \textbf{Sprint 2}} \\
+\hline\hline
+\textbf{Código} & \textbf{CE} & \textbf{CR} & \textbf{Responsables} & \textbf{Finalización} \\
+\hline
+\endfirsthead
+\textbf{Código} & \textbf{CE} & \textbf{CR} & \textbf{Responsables} & \textbf{Finalización} \\
+\hline\hline
+\endhead
+
+\textbf{RF011} & 1 & - & Por asignar & - \\
+\textbf{RF012} & 1 & - & Por asignar & - \\
+\textbf{RF013} & 2 & - & Por asignar & - \\
+\textbf{RF014} & 1 & - & Por asignar & - \\
+\textbf{RF015} & 3 & - & Por asignar & - \\
+\textbf{RF016} & 3 & - & Por asignar & - \\
+\textbf{RF017} & 3 & - & Por asignar & - \\
+\textbf{RF018} & 3 & - & Por asignar & - \\
+\textbf{RF019} & 3 & - & Por asignar & - \\
+\textbf{RF020} & 3 & - & Por asignar & - \\
+\textbf{RF021} & 2 & - & Por asignar & - \\
+\textbf{RNF003} & 2 & - & Por asignar & - \\
+\textbf{RNF004} & 3 & - & Por asignar & - \\
+\textbf{RNF005} & 2 & - & Por asignar & - \\
+
+\hline
+\textbf{Total} & \textbf{32} & \textbf{-} & & \\
+\hline
+
+\caption{Pila de la Iteración 2. \textbf{CE:} Carga Estimada, \textbf{CR:} Carga Real.}
+\label{SprintBacklog}
+
+\end{longtable}
+
+\subsection{Desempeño del equipo}
+Documente cualquier problema que se haya presentado durante el desarrollo. Describa las situaciones que se presentaron por las cuales fue necesario cambiar la pila de trabajo planificada (si hubieran).
+
+Incluya la gráfica de quemado e incorpore la siguiente información: Velocidad del equipo, carga estimada total, carga real total.
+
+% Gráfica de quemado
+\begin{figure}[H]
+  \centering
+    \includegraphics[height= 10cm, width=15cm]{project/images/data-sync}
+  \caption{\textbf{IMAGE CAPTION}}
+\end{figure}
+
+Si la carga estimada y la carga real difieren, explique porqué se da la diferencia.
