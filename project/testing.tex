@@ -1,31 +1,213 @@
 \chapter{Control de calidad}
-Introduzca en esta sección la estrategia utilizada para el control de calidad del producto. Incluya los miembros del equipo que participaron del proceso de control de calidad. Si utilizó alguna herramienta de pruebas automatizadas, descríbala en esta seccción. Procure citar y referenciar la bibliografía según corresponda.
+
+El proceso de control de calidad implementado en el proyecto \textbf{Komuness} durante el Sprint 2 se enfocó en garantizar la estabilidad, funcionalidad y seguridad del sistema de monetización mediante integración con PayPal, así como la corrección de errores críticos identificados en el Sprint 1.
+
+El equipo adoptó un enfoque de \textit{testing} riguroso, donde cada funcionalidad crítica relacionada con pagos fue sometida a múltiples niveles de verificación antes de su integración al sistema principal. Se implementaron pruebas específicas para validar el sistema de reintentos, manejo de errores de red y actualización automática de perfiles de usuario.
+
+La estrategia de control de calidad se estructuró en cuatro pilares fundamentales:
+\begin{itemize}
+    \item \textbf{Pruebas funcionales:} verificación de que cada requerimiento cumple con las especificaciones, incluyendo flujos de pago completos.
+    \item \textbf{Pruebas de integración:} validación de la comunicación entre frontend, backend y servicios externos (PayPal).
+    \item \textbf{Pruebas de seguridad:} verificación de autenticación, autorización y validación de webhooks de PayPal.
+    \item \textbf{Pruebas de manejo de errores:} confirmación de comportamiento robusto ante fallos de red, timeouts y errores de pago.
+\end{itemize}
+
+\section{Equipo participante}
+Los miembros involucrados en el proceso de control de calidad fueron:
+\begin{itemize}
+    \item \textbf{Fredrik Aburto Jiménez}
+    \item \textbf{Angélica Díaz Barrios} 
+    \item \textbf{Andrés Salas Araya} 
+\end{itemize}
+
+\section{Herramientas utilizadas}
+Se emplearon diversas herramientas y entornos para garantizar la calidad:
+\begin{itemize}
+    \item \textbf{PayPal Sandbox:} entorno de pruebas para validar flujos de pago sin transacciones reales.
+    \item \textbf{Jest + Supertest:} framework de pruebas unitarias y de integración para backend en Node.js.
+    \item \textbf{React Testing Library:} pruebas de componentes frontend y flujos de usuario.
+    \item \textbf{Postman:} pruebas manuales de endpoints API y validación de webhooks.
+    \item \textbf{Chrome DevTools:} debugging de errores de red y validación de reintentos.
+    \item \textbf{Navegadores múltiples:} validación cross-browser (Chrome, Firefox, Safari, Edge).
+    \item \textbf{Dispositivos físicos:} validación en smartphones y tablets reales para checkout responsive.
+\end{itemize}
 
 \section{Guiones de pruebas}
-Indique cuántos guiones de pruebas se utilizaron para comprobar la calidad del producto. Cuáles fueron los criterios empleados para definir cada prueba.
 
-\begin{longtable}{ | p{2cm} | p{3cm} | p{4cm} | p{4cm} | c |}
-      \hline
-      \textbf{Historias} & \textbf{Descripción} & \textbf{Resultado Esperado} & \textbf{Resultado Obtenido} & \textbf{Condición}\\
-      \hline
-      RF001 y RF003 & AAAA & BBBB & CCCC & \color{ForestGreen}PASÓ\\
-      \hline
-      RF002 y RF005 & AAAA & BBBB & CCCC & \color{Mahogany}FALLÓ\\
-      \hline
-      
-      \caption{Descripción rápida del guión de pruebas}
-      \label{TestScript1}
+Se desarrollaron \textbf{10 guiones de pruebas específicos} para validar las funcionalidades críticas implementadas durante el Sprint 2.  
+Los criterios empleados fueron:
+\begin{itemize}
+    \item Cobertura funcional completa de sistema de pagos y membresías.
+    \item Escenarios de error (fallos de red, pagos rechazados, timeouts).
+    \item Validación de reintentos automáticos con backoff exponencial.
+    \item Pruebas de seguridad (webhooks, autenticación, autorización).
+    \item Compatibilidad cross-platform y responsive.
+\end{itemize}
+
+\subsection{Guión 1: Integración de PayPal - Configuración (RF014)}
+
+\begin{longtable}{ | p{2cm} | p{4cm} | p{4cm} | p{4cm} | c |}
+\hline
+\textbf{Historias} & \textbf{Descripción} & \textbf{Resultado Esperado} & \textbf{Resultado Obtenido} & \textbf{Condición}\\
+\hline
+RF014 & Configuración de SDK de PayPal en entorno sandbox con credenciales de prueba & Variables de entorno configuradas, autenticación exitosa con PayPal API & Configuración exitosa, tokens de acceso generados correctamente & \color{ForestGreen}PASÓ \\
+\hline
+RF014 & Creación de orden de pago para plan mensual (\$4.00 USD) & Orden creada en PayPal con ID único y monto correcto & Orden creada correctamente, custom\_id con userId incluido & \color{ForestGreen}PASÓ \\
+\hline
+RF014 & Creación de orden de pago para plan anual (\$8.00 USD) & Orden creada en PayPal con ID único y monto correcto & Orden creada correctamente, descripción del plan incluida & \color{ForestGreen}PASÓ \\
+\hline
+\caption{Guión de pruebas 1: Configuración de PayPal SDK}
+\label{TestScript1}
 \end{longtable}
 
-\begin{longtable}{ | p{2cm} | p{3cm} | p{4cm} | p{4cm} | c |}
-      \hline
-      \textbf{Historias} & \textbf{Descripción} & \textbf{Resultado Esperado} & \textbf{Resultado Obtenido} & \textbf{Condición}\\
-      \hline
-      RF001 y RF003 & AAAA & BBBB & CCCC & \color{ForestGreen}PASÓ\\
-      \hline
-      RF002 y RF005 & AAAA & BBBB & CCCC & \color{Mahogany}FALLÓ\\
-      \hline
-      
-      \caption{Descripción rápida del otro guión de pruebas. Note que pueden haber varios guiones para la misma iteración.}
-      \label{TestScript1}
+\subsection{Guión 2: Flujo Completo de Pago Exitoso (RF015, RF018)}
+
+\begin{longtable}{ | p{2cm} | p{4cm} | p{4cm} | p{4cm} | c |}
+\hline
+\textbf{Historias} & \textbf{Descripción} & \textbf{Resultado Esperado} & \textbf{Resultado Obtenido} & \textbf{Condición}\\
+\hline
+RF015 y RF018 & Usuario básico selecciona plan mensual y completa pago con PayPal & Pago procesado, usuario actualizado a tipoUsuario=3 (premium), límite de publicaciones incrementado & Usuario actualizado correctamente, límite cambiado de 10 a 50, toast de éxito mostrado & \color{ForestGreen}PASÓ \\
+\hline
+RF015 y RF018 & Usuario básico selecciona plan anual y completa pago & Pago procesado, usuario actualizado a premium, descuento aplicado correctamente & Usuario premium, registro de pago guardado en BD con monto \$8.00 & \color{ForestGreen}PASÓ \\
+\hline
+RF015 & Validación de idempotencia en pagos duplicados & Si se recibe el mismo captureId dos veces, la segunda debe ser rechazada sin duplicar actualización & Sistema detectó duplicado, retornó idempotent:true, no se actualizó usuario dos veces & \color{ForestGreen}PASÓ \\
+\hline
+\caption{Guión de pruebas 2: Flujo de pago exitoso}
+\label{TestScript2}
+\end{longtable}
+
+\subsection{Guión 3: Sistema de Reintentos y Manejo de Errores (RF016)}
+
+\begin{longtable}{ | p{2cm} | p{4cm} | p{4cm} | p{4cm} | c |}
+\hline
+\textbf{Historias} & \textbf{Descripción} & \textbf{Resultado Esperado} & \textbf{Resultado Obtenido} & \textbf{Condición}\\
+\hline
+RF016 & Simulación de timeout en llamada a PayPal API & Sistema debe reintentar hasta 3 veces con backoff exponencial (1s, 3s, 9s) & 3 reintentos ejecutados correctamente, delays medidos: 1.02s, 3.01s, 9.03s & \color{ForestGreen}PASÓ \\
+\hline
+RF016 & Simulación de error de red (ECONNREFUSED) & Sistema debe marcar error como recuperable y reintentar & Error categorizado correctamente como CONNECTION\_ERROR, 3 reintentos realizados & \color{ForestGreen}PASÓ \\
+\hline
+RF016 & Simulación de fondos insuficientes & Sistema debe marcar error como NO recuperable y fallar sin reintentar & Error categorizado como INSUFFICIENT\_FUNDS, no se reintentó, mensaje claro al usuario & \color{ForestGreen}PASÓ \\
+\hline
+RF016 & Simulación de error 500 de PayPal & Sistema debe reintentar (error recuperable del servidor) & Error categorizado como PAYPAL\_SERVER\_ERROR, 3 reintentos ejecutados & \color{ForestGreen}PASÓ \\
+\hline
+RF016 & Historial de reintentos guardado en base de datos & Cada reintento debe registrarse con timestamp, attemptNumber, errorCode & Historial guardado correctamente en Payment.retryHistory con todos los campos & \color{ForestGreen}PASÓ \\
+\hline
+\caption{Guión de pruebas 3: Sistema de reintentos}
+\label{TestScript3}
+\end{longtable}
+
+\subsection{Guión 4: Webhooks de PayPal (RF015)}
+
+\begin{longtable}{ | p{2cm} | p{4cm} | p{4cm} | p{4cm} | c |}
+\hline
+\textbf{Historias} & \textbf{Descripción} & \textbf{Resultado Esperado} & \textbf{Resultado Obtenido} & \textbf{Condición}\\
+\hline
+RF015 & Recepción de webhook PAYMENT.CAPTURE.COMPLETED & Webhook recibido, firma verificada, usuario actualizado a premium & Webhook procesado correctamente, firma válida, usuario actualizado & \color{ForestGreen}PASÓ \\
+\hline
+RF015 & Recepción de webhook con firma inválida & Webhook debe ser rechazado por seguridad & Webhook rechazado, status 401, mensaje de error claro & \color{ForestGreen}PASÓ \\
+\hline
+RF015 & Recepción de webhook duplicado (mismo eventId) & Sistema debe detectar duplicado y no procesar dos veces & Duplicado detectado por índice único en eventId, retornó idempotent:true & \color{ForestGreen}PASÓ \\
+\hline
+\caption{Guión de pruebas 4: Webhooks de PayPal}
+\label{TestScript4}
+\end{longtable}
+
+\subsection{Guión 5: Sistema de Límites de Publicaciones (RF013, RF018)}
+
+\begin{longtable}{ | p{2cm} | p{4cm} | p{4cm} | p{4cm} | c |}
+\hline
+\textbf{Historias} & \textbf{Descripción} & \textbf{Resultado Esperado} & \textbf{Resultado Obtenido} & \textbf{Condición}\\
+\hline
+RF013 & Usuario básico con 9 publicaciones intenta crear la décima & Publicación creada exitosamente (dentro del límite de 10) & Publicación creada, contador actualizado a 10/10 & \color{ForestGreen}PASÓ \\
+\hline
+RF013 y RF018 & Usuario básico con 10 publicaciones intenta crear una más & Sistema debe rechazar con error 403 y mostrar alerta para actualizar a premium & Error 403 retornado, modal de alerta mostrado, botón "Actualizar a Premium" visible & \color{ForestGreen}PASÓ \\
+\hline
+RF013 & Usuario premium con límite de 50 publica exitosamente & Publicación creada sin restricciones hasta llegar a 50 & Publicaciones 1-50 creadas exitosamente & \color{ForestGreen}PASÓ \\
+\hline
+RF018 & Modal de alerta muestra progreso visual del límite & Barra de progreso refleja porcentaje usado (ej: 10/10 = 100\%) & Barra de progreso en 100\%, color rojo, mensaje de límite alcanzado & \color{ForestGreen}PASÓ \\
+\hline
+\caption{Guión de pruebas 5: Límites de publicaciones}
+\label{TestScript5}
+\end{longtable}
+
+\subsection{Guión 6: Gestión de Configuración de Límites (RF013)}
+
+\begin{longtable}{ | p{2cm} | p{4cm} | p{4cm} | p{4cm} | c |}
+\hline
+\textbf{Historias} & \textbf{Descripción} & \textbf{Resultado Esperado} & \textbf{Resultado Obtenido} & \textbf{Condición}\\
+\hline
+RF013 & Admin actualiza límite básico de 10 a 15 & Configuración guardada, usuarios básicos nuevos tienen límite 15 & Actualización exitosa, nuevos usuarios básicos con límite 15/15 & \color{ForestGreen}PASÓ \\
+\hline
+RF013 & Admin actualiza límite premium de 50 a 100 & Configuración guardada, usuarios premium con límite ampliado & Límite actualizado, usuarios premium existentes reflejan nuevo límite 100 & \color{ForestGreen}PASÓ \\
+\hline
+RF013 & Admin intenta configurar límite básico mayor que premium & Sistema debe rechazar con validación de error & Error retornado, mensaje: "límite premium debe ser mayor o igual al básico" & \color{ForestGreen}PASÓ \\
+\hline
+\caption{Guión de pruebas 6: Configuración de límites}
+\label{TestScript6}
+\end{longtable}
+
+\subsection{Guión 7: Sección Acerca de (RF017)}
+
+\begin{longtable}{ | p{2cm} | p{4cm} | p{4cm} | p{4cm} | c |}
+\hline
+\textbf{Historias} & \textbf{Descripción} & \textbf{Resultado Esperado} & \textbf{Resultado Obtenido} & \textbf{Condición}\\
+\hline
+RF017 & Admin crea/actualiza contenido de "Quiénes Somos" & Contenido guardado en BD, visible en vista pública & Texto guardado correctamente, mostrado en acordeón de vista pública & \color{ForestGreen}PASÓ \\
+\hline
+RF017 & Admin sube imagen a carrusel de proyectos & Imagen almacenada en servidor, URL guardada en BD, visible en carrusel & Imagen subida a /uploads, path guardado en imagenesProyectos array & \color{ForestGreen}PASÓ \\
+\hline
+RF017 & Admin intenta subir más de 10 imágenes a carrusel & Sistema debe rechazar con límite de 10 imágenes & Error 400, mensaje: "Máximo 10 imágenes para proyectos" & \color{ForestGreen}PASÓ \\
+\hline
+RF017 & Visitante no autenticado accede a sección "Acerca de" & Contenido visible sin requerir autenticación & Sección accesible públicamente, todos los campos mostrados & \color{ForestGreen}PASÓ \\
+\hline
+\caption{Guión de pruebas 7: Sección Acerca de}
+\label{TestScript7}
+\end{longtable}
+
+\subsection{Guión 8: Correcciones de Errores del Sprint 1 (RF011, RF012)}
+
+\begin{longtable}{ | p{2cm} | p{4cm} | p{4cm} | p{4cm} | c |}
+\hline
+\textbf{Historias} & \textbf{Descripción} & \textbf{Resultado Esperado} & \textbf{Resultado Obtenido} & \textbf{Condición}\\
+\hline
+RF011 & Usuario busca archivo en biblioteca y luego borra el texto & Resultados deben limpiarse, mostrando todos los archivos de nuevo & Filtro limpiado correctamente, vista resetea a estado inicial & \color{ForestGreen}PASÓ \\
+\hline
+RF011 & Usuario intenta subir archivo de 250MB a biblioteca & Sistema debe rechazar con error de límite (200MB máximo) & Error 413, mensaje: "archivo excede límite de 200MB" & \color{ForestGreen}PASÓ \\
+\hline
+RF012 & Usuario solicita recuperación de contraseña en producción & Email enviado exitosamente, sin error 504 Gateway Timeout & Email recibido, link de recuperación válido, timeout corregido & \color{ForestGreen}PASÓ \\
+\hline
+\caption{Guión de pruebas 8: Correcciones del Sprint 1}
+\label{TestScript8}
+\end{longtable}
+
+\subsection{Guión 9: Sistema de Moderación Premium (RF019)}
+
+\begin{longtable}{ | p{2cm} | p{4cm} | p{4cm} | p{4cm} | c |}
+\hline
+\textbf{Historias} & \textbf{Descripción} & \textbf{Resultado Esperado} & \textbf{Resultado Obtenido} & \textbf{Condición}\\
+\hline
+RF019 & Usuario premium edita su publicación existente & Publicación actualizada, admin notificado por correo & Edición guardada, correo enviado a admin con link a publicación & \color{ForestGreen}PASÓ \\
+\hline
+RF019 & Usuario premium elimina su publicación & Publicación marcada como eliminada, admin notificado & Publicación soft-deleted, notificación enviada correctamente & \color{ForestGreen}PASÓ \\
+\hline
+RF019 & Usuario básico intenta editar publicación & Sistema debe permitir edición sin restricción de tipo de usuario & Edición permitida para todos los usuarios autenticados & \color{ForestGreen}PASÓ \\
+\hline
+\caption{Guión de pruebas 9: Moderación premium}
+\label{TestScript9}
+\end{longtable}
+
+\subsection{Guión 10: Pruebas de Seguridad y Autenticación (RNF)}
+
+\begin{longtable}{ | p{2cm} | p{4cm} | p{4cm} | p{4cm} | c |}
+\hline
+\textbf{Historias} & \textbf{Descripción} & \textbf{Resultado Esperado} & \textbf{Resultado Obtenido} & \textbf{Condición}\\
+\hline
+RNF & Usuario no autenticado intenta acceder a /checkout-premium & Redirección a login con mensaje informativo & Middleware de autenticación funcionando, redirección a /iniciarSesion & \color{ForestGreen}PASÓ \\
+\hline
+RNF & Usuario básico intenta actualizar límites globales (endpoint admin) & Acceso denegado (error 403) & Middleware de roles funcionando, error 403 retornado & \color{ForestGreen}PASÓ \\
+\hline
+RNF & Usuario intenta realizar pago sin token JWT válido & Sistema debe rechazar la petición & Error 401, mensaje: "Token inválido o expirado" & \color{ForestGreen}PASÓ \\
+\hline
+\caption{Guión de pruebas 10: Seguridad y autenticación}
+\label{TestScript10}
 \end{longtable}

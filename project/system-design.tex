@@ -1,32 +1,240 @@
 \chapter{Arquitectura del sistema}
+
 \section{Diseño general del sistema}
 
-Descripción en prosa del diseño del sistema. Resalte cualquier detalle que considere de importancia para la comprensión del diseño. Indique cuál patrón arquitectónico está utilizando como base para su sistema. Si está utilizando un \textit{framework} para apoyar el proceso de desarrollo, descríbalo en esta sección. Cite y referencie adecuadamente la información que lo requiera.
+La arquitectura del sistema desarrollado para Komuness mantiene el patrón Modelo-Vista-Controlador (MVC) establecido en el Sprint 1, con extensiones significativas para soportar el sistema de monetización y membresías premium implementado en el Sprint 2.
 
-\subsection{Diseño de la persistencia}
-Describa en esta sección la estrategia que abordó para diseñar la persistencia del sistema, incluya un diagrama para el modelo conceptual (Entidad-Relación) del sistema. Especifique cuáles aspectos del diseño fue necesario cambiar desde la última iteración, justifique todos los cambios.
+El diseño continúa basándose en una API RESTful siguiendo los principios de Fielding (2000), con nuevas capas de seguridad y procesamiento de pagos que mantienen la separación clara de responsabilidades y facilitan el mantenimiento del código.
+
+\subsection*{Cambios arquitectónicos del Sprint 2}
+
+Durante esta iteración se realizaron extensiones arquitectónicas significativas sin romper la compatibilidad con el sistema existente:
+
+\begin{enumerate}
+  \item Integración con servicios externos de pago: Se añadió capa de integración con PayPal SDK, incluyendo manejo de OAuth2, verificación criptográfica de webhooks y procesamiento de eventos asíncronos.
+  
+  \item Sistema de reintentos y resiliencia: Implementación de utilidades de reintento con backoff exponencial (paymentRetry.ts) y manejador centralizado de errores de pago (paymentErrorHandler.ts), mejorando la confiabilidad del sistema ante fallos temporales de red.
+  
+  \item Middleware de límites de publicaciones: Nuevo middleware de validación que intercepta creación de publicaciones y verifica límites según tipo de usuario, consultando configuración dinámica en base de datos.
+  
+  \item Sistema de moderación con versionado: Almacenamiento temporal de cambios propuestos mediante campo pendingUpdate en modelo de publicaciones, permitiendo flujo de aprobación sin afectar contenido visible.
+  
+  \item Colección de configuración: Nueva entidad Configuracion que permite ajustar parámetros del sistema (límites de publicaciones) sin redespliegue, consultable mediante API.
+  
+  \item Auditoría de pagos: Colección payments para registro completo de transacciones, incluyendo captureId, eventId, historial de reintentos y metadata para análisis y soporte.
+\end{enumerate}
+
+\subsection*{Arquitectura Backend}
+
+El backend mantiene Express.js con TypeScript, reforzando el tipado estático con nuevas interfaces para entidades de pago y configuración:
+
+\begin{itemize}
+  \item Controladores: Se añadieron controladores especializados:
+  \begin{itemize}
+    \item paypal.controller.ts: Maneja captura de pagos y procesamiento de webhooks.
+    \item configuracion.controller.ts: Gestiona configuración de límites y parámetros del sistema.
+  \end{itemize}
+  
+  \item Modelos: Extensión de modelos existentes y nuevos esquemas:
+  \begin{itemize}
+    \item Usuario: Nuevos campos tipoUsuario (0=superadmin, 1=admin, 2=básico, 3=premium), fechaVencimientoPremium, limitePublicaciones.
+    \item Publicacion: Campo pendingUpdate para almacenar cambios propuestos, editCount, lastEditRequest.
+    \item Configuracion (nuevo): Esquema clave-valor para parámetros del sistema.
+    \item Payment (nuevo): Auditoría de transacciones PayPal.
+  \end{itemize}
+  
+  \item Rutas: Nuevos endpoints REST:
+  \begin{itemize}
+    \item POST /api/paypal/capture: Captura orden de PayPal y actualiza usuario.
+    \item POST /api/paypal/webhook: Recibe eventos asíncronos de PayPal.
+    \item GET /api/configuracion/mis-limites: Consulta límites de usuario autenticado.
+    \item PUT /api/configuracion/limites-publicaciones: Actualiza límites globales (admin).
+    \item PUT /api/publicaciones/admin/:id/approve-update: Aprueba cambios pendientes.
+    \item PUT /api/publicaciones/admin/:id/reject-update: Rechaza cambios pendientes.
+  \end{itemize}
+  
+  \item Middlewares: Extensión de capacidades:
+  \begin{itemize}
+    \item verificarLimitesPublicaciones: Middleware que valida límites antes de creación.
+    \item verificarUsuarioPremium: Valida membresía activa y no vencida.
+  \end{itemize}
+  
+  \item Utilidades: Nuevas utilidades especializadas:
+  \begin{itemize}
+    \item paypal.ts: Funciones para interactuar con PayPal API (getAccessToken, captureOrder, verifyWebhookSignature).
+    \item paymentRetry.ts: Sistema de reintentos con backoff exponencial.
+    \item paymentErrorHandler.ts: Clasificación y manejo de errores de pago.
+  \end{itemize}
+  
+  \item Interfaces TypeScript: Contratos de datos:
+  \begin{itemize}
+    \item payment.interface.ts: Tipos para PaymentError, RetryHistoryEntry, PaymentResult.
+    \item configuracion.interface.ts: Tipado para entidad de configuración.
+  \end{itemize}
+\end{itemize}
+
+\subsection*{Arquitectura Frontend}
+
+El frontend en React.js se enriqueció con componentes especializados para el flujo de membresías:
+
+\begin{itemize}
+  \item Componentes de membresía:
+  \begin{itemize}
+    \item CheckoutPremium.js: Página completa de checkout con integración PayPal SDK, selección de planes (mensual/anual), manejo de estados de pago (procesando, error, éxito) con animaciones visuales y reintentos.
+    \item AlertaLimitePublicaciones.js: Modal que se activa cuando usuario básico alcanza su límite, mostrando estadísticas de uso con barras de progreso y botón CTA para upgrade.
+    \item ModalLimitesPublicaciones.js: Panel administrativo para configurar límites globales de publicaciones para usuarios básicos y premium.
+  \end{itemize}
+  
+  \item Componentes de moderación:
+  \begin{itemize}
+    \item Vista comparativa de cambios en perfilUsuario.js: Renderiza diferencias lado a lado con código tachado para valores eliminados y resaltado verde para nuevos.
+    \item Sistema de pestañas: "Publicaciones Nuevas" vs "Actualizaciones Pendientes" para organizar tareas administrativas.
+  \end{itemize}
+  
+  \item Integración PayPal:
+  \begin{itemize}
+    \item @paypal/react-paypal-js: SDK oficial de PayPal para React.
+    \item PayPalScriptProvider: Contexto global para configuración de PayPal.
+    \item PayPalButtons: Componente de botones con callbacks (createOrder, onApprove, onError, onCancel).
+  \end{itemize}
+  
+  \item Gestión de estado:
+  \begin{itemize}
+    \item Variables de estado para tracking de proceso de pago: procesando, reintentos, errorMessage.
+    \item Hook useEffect para cargar datos de límites del usuario autenticado.
+    \item Estado local para pestañas administrativas y datos de actualizaciones pendientes.
+  \end{itemize}
+\end{itemize}
+
+\subsection*{Comunicación y Seguridad}
+
+El sistema de autenticación JWT se mantiene del Sprint 1, con adiciones de seguridad:
+
+\begin{itemize}
+  \item Verificación de webhooks: Validación criptográfica de firmas HMAC-SHA256 usando certificados de PayPal para garantizar autenticidad de eventos.
+  \item Variables de entorno: Credenciales sensibles (PAYPAL_CLIENTID, PAYPAL_SECRET, PAYPAL_WEBHOOK_ID) almacenadas en .env y nunca expuestas en cliente.
+  \item HTTPS obligatorio: PayPal requiere HTTPS para webhooks en producción, configurado en servidor.
+  \item Idempotencia de pagos: Prevención de procesamiento duplicado mediante índices únicos en captureId y eventId.
+\end{itemize}
+
+\section{Diseño de la persistencia}
+
+El modelo de persistencia se extendió para soportar membresías premium y configuración dinámica, manteniendo compatibilidad con el esquema del Sprint 1.
+
+\subsection*{Modelo Conceptual Actualizado}
+
+Cambios realizados en el Sprint 2:
+
+\begin{itemize}
+  \item Usuario: Se añadieron campos:
+  \begin{itemize}
+    \item tipoUsuario: Enum (0=superadmin, 1=admin, 2=básico, 3=premium).
+    \item fechaVencimientoPremium: Date opcional para gestionar suscripciones.
+    \item limitePublicaciones: Number opcional para overrides personalizados.
+    \item publicacionesActuales: Contador calculado dinámicamente.
+  \end{itemize}
+  
+  \item Publicacion: Se extendió con campos de moderación:
+  \begin{itemize}
+    \item pendingUpdate: Object que almacena cambios propuestos por usuarios premium.
+    \item editCount: Number, contador de ediciones realizadas (máximo 3).
+    \item lastEditRequest: Date, timestamp de última solicitud de edición.
+  \end{itemize}
+  
+  \item Configuracion (nueva entidad):
+  \begin{itemize}
+    \item clave: String único (ej: "limite_publicaciones_basico").
+    \item valor: Mixed (Number, String, Boolean según clave).
+    \item descripcion: String para documentación interna.
+    \item tipo: String ("number", "string", "boolean").
+  \end{itemize}
+  
+  \item Payment (nueva entidad):
+  \begin{itemize}
+    \item captureId, eventId: String únicos para idempotencia.
+    \item orderId: String, referencia a orden de PayPal.
+    \item status: String (COMPLETED, APPROVED, FAILED).
+    \item value, currency: Number y String para monto.
+    \item userId: ObjectId referencia a Usuario.
+    \item source: String ("capture" o "webhook").
+    \item retryHistory: Array de intentos con timestamps.
+    \item raw: Object con evento completo de PayPal.
+  \end{itemize}
+  
+  \item Sin cambios: Categoria, Comentario, Archivo, Carpeta.
+\end{itemize}
 
 \begin{figure}[H]
-  \centering
-    \includegraphics[height= 10cm, width=15cm]{project/images/data-sync}
-  \caption{\textbf{IMAGE CAPTION}}
+    \centering
+    \includegraphics[width=\textwidth]{project/images/Diagrama.jpeg} % Cambia la ruta según tu imagen
+    \caption{Diagrama arquitectura}
+    \label{fig:acerca-header}
 \end{figure}
 
-Incluya y describa el modelo lógico (Diagrama relacional) de su sistema. Especifique todos los aspectos del diseño que fue necesario cambiar desde la última iteración, justifique todos los cambios.
+\subsection*{Justificación de los cambios}
 
-\begin{figure}[H]
-  \centering
-    \includegraphics[height= 10cm, width=15cm]{project/images/data-sync}
-  \caption{\textbf{IMAGE CAPTION}}
-\end{figure}
+\begin{enumerate}
+  \item Separación de roles premium: El campo tipoUsuario con valor 3 permite diferenciar usuarios premium sin crear nueva entidad, simplificando queries y manteniendo consistencia.
+  
+  \item Versionado de publicaciones: El enfoque de pendingUpdate evita modificar publicaciones visibles directamente, permitiendo reversión fácil y auditoría completa de cambios.
+  
+  \item Configuración dinámica: La entidad Configuracion centraliza parámetros ajustables sin código, facilitando cambios operativos (ej: ajustar límites según demanda).
+  
+  \item Auditoría completa de pagos: La colección payments proporciona trazabilidad completa para soporte, contabilidad y debugging, incluyendo historial de reintentos.
+  
+  \item Idempotencia mediante índices: Los índices únicos en captureId y eventId garantizan que eventos duplicados de PayPal (common en webhooks) no causen double-charging o corrupción de datos.
+\end{enumerate}
 
-\subsection{Diagrama de clases}
-Añada una imagen con el diagrama de clases del sistema,  preferiblemente desarrollado en DIA. Introdúzcala con un párrafo breve que enlace el diagrama con la descripción en prosa del encabezado de sección. Se recomienda que el diagrama se diseñe de forma que calce bien en una página vertical, de forma que se facilite su lectura. Recuerde hacer referencia a su diagrama de clases usando la referencia correcta. Por ejemplo, en la Figura \ref{DiagramaClases} se encuentra el diagrama de clases.
-\begin{figure}[H]
-  \centering
-    \includegraphics[ width=15cm]{project/images/class-example-online-shopping-domain.png}
-  \caption{\textbf{IMAGE CAPTION}}
-  \label{DiagramaClases}
-\end{figure}
+\subsection*{Estrategia de Almacenamiento}
 
+Se mantiene la estrategia híbrida del Sprint 1:
 
+\begin{itemize}
+  \item Imágenes de publicaciones: Digital Ocean Spaces (CDN para rendimiento).
+  \item Documentos de biblioteca: Almacenamiento local en servidor.
+  \item Datos transaccionales: MongoDB para configuración, pagos y usuarios.
+  \item Logs de errores de pago: Colección payment_errors (futura) para análisis de problemas recurrentes.
+\end{itemize}
+
+\section{Diagrama de clases}
+
+El diagrama de clases refleja las extensiones del Sprint 2, incorporando clases de pago y configuración.
+
+\subsection*{Clases principales}
+
+\begin{itemize}
+  \item Usuario: Atributos extendidos (tipoUsuario, fechaVencimientoPremium, limitePublicaciones). Métodos: isPremium(), canPublish(), getRemainingPublications().
+  
+  \item Publicacion: Nuevos atributos (pendingUpdate, editCount, lastEditRequest). Métodos: requestEdit(changes), approveEdit(), rejectEdit(), canEdit().
+  
+  \item Configuracion (nueva): Atributos (clave, valor, tipo, descripcion). Métodos estáticos: get(clave), set(clave, valor), getDefaults().
+  
+  \item Payment (nueva): Atributos (captureId, orderId, status, value, userId, retryHistory). Métodos: isIdempotent(), addRetry(attempt), markCompleted().
+  
+  \item PayPalService (nueva clase de servicio): Métodos: getAccessToken(), captureOrder(orderId), verifyWebhookSignature(headers, body), extractPaymentInfo(resource).
+  
+  \item PaymentRetryService (nueva): Métodos: retryWithExponentialBackoff(operation, maxAttempts), calculateDelay(attemptNumber), shouldRetry(error).
+  
+  \item Sin cambios: Categoria, Comentario, Archivo, Carpeta.
+\end{itemize}
+
+\subsection*{Relaciones nuevas}
+
+\begin{itemize}
+  \item Usuario 1---* Payment: Un usuario puede tener múltiples transacciones.
+  \item Payment *---1 Usuario: Cada pago está asociado a un usuario (vía userId).
+  \item Publicacion 1---0..1 PendingUpdate: Cada publicación puede tener máximo una actualización pendiente.
+  \item Configuracion sin relaciones directas (singleton pattern).
+\end{itemize}
+
+[[INSERTAR IMAGEN: Diagrama de clases actualizado del Sprint 2 mostrando nuevas clases Payment, Configuracion, PayPalService y relaciones con Usuario y Publicacion]]
+
+\subsection*{Patrones de diseño aplicados}
+
+\begin{enumerate}
+  \item Repository Pattern: Abstracción de acceso a datos en controladores.
+  \item Service Layer Pattern: Lógica de negocio de pagos encapsulada en PayPalService y PaymentRetryService.
+  \item Strategy Pattern: Diferentes estrategias de reintento según tipo de error.
+  \item Observer Pattern: Webhooks de PayPal actúan como notificaciones asíncronas.
+  \item Singleton Pattern: Configuración global única consultable desde cualquier módulo.
+\end{enumerate}

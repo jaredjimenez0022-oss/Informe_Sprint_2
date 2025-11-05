@@ -1,25 +1,274 @@
 \chapter{Prototipos de interfaz}
-En este capítulo adjunte y describa los prototipos de la interfaz para su aplicación. Procure hacer referencia al diseño de interacción y diseño para la usabilidad presentes en su aplicación.
-Si su aplicación tiene propiedades de accesibilidad para un público con necesidades especiales, por favor describa las estrategias usadas en esta sección.
+En este capítulo se presentan los prototipos de interfaz desarrollados para el sistema \textbf{Komuness}, 
+enfocándose en las funcionalidades implementadas y mejoradas durante el \textit{Sprint 2}. 
+El diseño de la interfaz prioriza la usabilidad, experiencia de usuario y accesibilidad, considerando 
+las necesidades específicas del sistema de monetización y perfiles premium implementados.
 
-\section{Prototipos de la funcionalidad X}
-Recuerde poner un texto introductorio breve para cada sección.
-\vspace{2cm}
-\begin{figure}[H]
-  \centering
-    \includegraphics[height= 11cm, width=17cm]{project/images/data-sync}
-\end{figure}
-\newpage
-\begin{figure}[H]
-  \centering
-    \includegraphics[height= 11cm, width=17cm]{project/images/data-sync}
-\end{figure}
-\vspace{1cm}
+El enfoque de diseño mantiene los principios de diseño centrado en el usuario establecidos en el Sprint 1, 
+implementando interfaces intuitivas que facilitan el proceso de pago y gestión de membresías. 
+Se ha prestado especial atención a la retroalimentación visual en procesos críticos como transacciones 
+y manejo de errores, garantizando transparencia y confianza para los usuarios.
 
-\section{Prototipos de la funcionalidad Y}
-No olvide referenciar las imágenes en el texto usando \emph{label} y \emph{ref}.
+\section{Prototipos del Sistema de Membresías Premium}
+
+El sistema de membresías premium permite a los usuarios actualizar sus cuentas para obtener beneficios adicionales,
+implementando un flujo de pago seguro mediante integración con PayPal.
+
+\subsection{Interfaz de Selección de Planes}
+
+\begin{figure}[H] % o [htbp] si no usas el paquete float
+    \centering
+    \includegraphics[width=0.8\textwidth]{project/images/interfaz1.PNG} % ruta y tamaño de la imagen
+    \caption{Vista principal de selección de planes premium, donde los usuarios pueden comparar y elegir entre diferentes opciones de membresía.}
+    \label{fig:premium-planes}
+\end{figure}
+
+
+Características principales:
+\begin{itemize}
+  \item Comparación visual clara entre plan mensual (\$4.00/mes) y anual (\$8.00/año).
+  \item Badge destacado de descuento (33\% OFF) en plan anual.
+  \item Lista de beneficios incluidos en la membresía premium.
+  \item Diseño con gradientes atractivos (amarillo-dorado) para resaltar el valor premium.
+  \item Indicador visual del plan seleccionado con animación.
+\end{itemize}
+
+Características de usabilidad:
+\begin{itemize}
+  \item Información de precios grande y legible.
+  \item Comparación de ahorro (precio original vs. precio con descuento).
+  \item Botón de retroceso para facilitar la navegación.
+  \item Descripción clara de la periodicidad de facturación.
+\end{itemize}
+
+\subsection{Interfaz de Pago con PayPal}
+
+La Figura~\ref{fig:premium-paypal} muestra la integración de botones de PayPal para completar el proceso de pago.
+
+\begin{figure}[H] % o [htbp] si no usas el paquete float
+    \centering
+    \includegraphics[width=0.8\textwidth]{project/images/interfaz1.PNG} % ruta y tamaño de la imagen
+    \caption{muestra la integración de botones de PayPal para completar el proceso de pago.}
+    \label{fig:premium-planes}
+\end{figure}
+
+
+\begin{itemize}
+  \item Integración nativa de PayPal Buttons SDK.
+  \item Resumen del plan seleccionado antes del pago.
+  \item Indicadores de seguridad (icono de escudo, mensaje de encriptación).
+  \item Estados de carga con animaciones mientras se procesa el pago.
+  \item Diseño responsive adaptado a dispositivos móviles.
+\end{itemize}
+
+\subsection{Sistema de Manejo de Errores de Pago}
+
+\begin{figure}[H] % o [htbp] si no usas el paquete float
+    \centering
+    \includegraphics[width=0.8\textwidth]{project/images/pagoerror.PNG} % ruta y tamaño de la imagen
+    \caption{muestra el sistema avanzado de retroalimentación para errores de pago.}
+    \label{fig:premium-planes}
+\end{figure}
+
+Características del sistema de errores:
+\begin{itemize}
+  \item Mensajes de error específicos según el tipo de fallo (conexión, fondos insuficientes, tarjeta inválida).
+  \item Animación de shake para llamar la atención sobre el error.
+  \item Lista de sugerencias de acciones correctivas.
+  \item Códigos de color diferenciados (rojo para errores, amarillo para advertencias).
+\end{itemize}
+
+\subsection{Confirmación de Pago Exitoso}
+
+\begin{figure}[H] % o [htbp] si no usas el paquete float
+    \centering
+    \includegraphics[width=0.8\textwidth]{project/images/Interfaz4.png} % ruta y tamaño de la imagen
+    \caption{ Vista de confirmación exitosa con mensaje de felicitaciones y redirección automática al perfi}
+    \label{fig:premium-planes}
+\end{figure}
+
+\begin{itemize}
+  \item Toast notification con animación y emoji celebratorio.
+  \item Mensaje claro de confirmación de actualización a premium.
+  \item Redirección automática al perfil de usuario.
+\end{itemize}
+
+\section{Prototipos del Sistema de Alertas de Límites}
+
+El sistema de alertas notifica a los usuarios cuando alcanzan su límite de publicaciones y les ofrece la opción de actualizar a premium.
+
+\subsection{Modal de Límite Alcanzado}
+
+
+\begin{figure}[H] % o [htbp] si no usas el paquete float
+    \centering
+    \includegraphics[width=0.8\textwidth]{project/images/Interfaz5Ori.png} % ruta y tamaño de la imagen
+    \caption{Modal de alerta mostrando límite alcanzado con barra de progreso y botón para actualizar a premium }
+    \label{fig:premium-planes}
+\end{figure}
+
+Características:
+\begin{itemize}
+  \item Header con gradiente amarillo-dorado llamativo.
+  \item Icono de estrella animado con pulso.
+  \item Estadísticas claras (X de Y publicaciones utilizadas).
+  \item Lista de beneficios premium destacados.
+  \item Botón de acción directa Actualizar a Premium.
+  \item Opción de cerrar para continuar sin actualizar.
+\end{itemize}
+
+Principios de UX aplicados:
+\begin{itemize}
+  \item Intervención no invasiva (modal con opción de cerrar).
+  \item Propuesta de valor clara antes de solicitar pago.
+  \item Animaciones sutiles para captar atención sin molestar.
+  \item Call-to-action destacado visualmente.
+\end{itemize}
+
+\section{Prototipos del Sistema de Gestión “Acerca de”}
+
+La sección \textbf{Acerca de} permite a los administradores gestionar la información institucional de Komuness CR.
+
+\subsection{Vista Pública de la Sección}
+
+La Figura~\ref{fig:acerca-vista} muestra la vista pública accesible para todos los visitantes.
 
 \begin{figure}[H]
-  \centering
-    \includegraphics[height= 11cm, width=17cm]{project/images/data-sync}
+    \centering
+    \includegraphics[width=\textwidth]{project/images/Interfaz6.png} % Ajusta la ruta de la imagen
+    \caption{Vista completa de la sección Acerca de, panel de información y datos de contacto.}
+    \label{fig:acerca-vista}
 \end{figure}
+
+\noindent
+\textbf{Elementos visuales:}
+\begin{itemize}
+    \item Banner principal con título y subtítulo institucional.
+    \item Sección “Quiénes Somos” 
+    \item Iconografía colorida para cada sección del acordeón.
+    \item Datos de contacto con enlaces clicables (teléfono, correo electrónico, redes sociales).
+\end{itemize}
+
+\subsection{Interfaz de Edición (Administrador)}
+
+La Figura~\ref{fig:acerca-edit} muestra el panel de administración para editar contenido.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{project/images/Interfaz8.png} % Ajusta la ruta de la imagen
+    \caption{Panel de edición con formularios para todas las secciones de Acerca de, sistema de carga de imágenes y botones de acción.}
+    \label{fig:acerca-edit}
+\end{figure}
+
+\noindent
+\textbf{Características administrativas:}
+\begin{itemize}
+    \item Formularios organizados por secciones temáticas.
+    \item Textareas con auto-resize para textos largos.
+    \item Sistema de carga de imágenes con previsualización instantánea.
+    \item Límite de tamaño de archivos (proyectos/equipo).
+    \item Botones para eliminar imágenes individuales.
+    \item Gestión de información de donaciones y contactos.
+    \item Botones de acción: guardar cambios o cancelar.
+    \item Feedback visual durante el guardado (estado de carga).
+\end{itemize}
+
+
+\subsection{Sistema de Carrusel de Proyectos}
+
+La Figura~\ref{fig:acerca-carousel} muestra el carrusel interactivo con modal de expansión.
+
+[[INSERTAR IMAGEN: Carrusel de imágenes con botones de navegación y modal de visualización en pantalla completa]]
+
+\begin{itemize}
+  \item Navegación mediante flechas (anterior/siguiente).
+  \item Indicadores de posición (puntos).
+  \item Click en imagen para abrir modal en tamaño completo.
+  \item Modal con fondo oscuro semitransparente.
+  \item Botón de cerrar (X) visible en la esquina.
+  \item Transiciones suaves entre imágenes.
+\end{itemize}
+
+\section{Prototipos de Correcciones Frontend}
+
+\subsection{Corrección del Filtro de Búsqueda en Biblioteca}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{project/images/Interfaz10.png} % Ajusta la ruta de la imagen
+    \caption{Campo de búsqueda en biblioteca con resultados filtrados correctamente y opción de limpiar búsqueda}
+    \label{fig:acerca-edit}
+\end{figure}
+
+Mejoras implementadas:
+\begin{itemize}
+  \item Limpieza automática de resultados al borrar el texto de búsqueda.
+  \item Indicador visual de filtro activo.
+  \item Botón para limpiar búsqueda rápidamente.
+  \item Feedback inmediato al escribir (búsqueda en tiempo real).
+\end{itemize}
+
+\subsection{Sistema de Límite de Tamaño de Archivos}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{project/images/interfaz11.png} % Ajusta la ruta de la imagen
+    \caption{muestra mensajes de error por archivos excedidos}
+    \label{fig:acerca-edit}
+\end{figure}
+
+\begin{itemize}
+  \item Validación de tamaño antes de iniciar carga.
+  \item Mensaje de error específico indicando límite de 200MB.
+  \item Cancelación de carga si se detecta tamaño excedido.
+\end{itemize}
+
+\section{Prototipos de Perfil de Usuario con Indicadores Premium}
+
+\subsection{Vista de Perfil Usuario Básico}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{project/images/Interfaz5.png} % Ajusta la ruta de la imagen
+    \caption{Perfil de usuario mostrando badge "Básico", barra de progreso de límite de publicaciones y botón para actualizar a premium}
+    \label{fig:acerca-edit}
+\end{figure}
+
+Elementos visuales:
+\begin{itemize}
+  \item Badge identificador del tipo de cuenta (color azul para básico).
+  \item Barra de progreso mostrando publicaciones utilizadas vs. límite.
+  \item Contador numérico de publicaciones disponibles.
+  \item Botón destacado Actualizar a Premium" con gradiente amarillo.
+  \item Advertencia visual cuando se acerca al límite (barra roja).
+\end{itemize}
+
+
+
+\subsection{Diseño Responsive en Dispositivos Móviles}
+
+La Figura~\ref{fig:premium-responsive} muestra la adaptación del sistema de pago a móviles.
+
+[[INSERTAR IMAGEN: Vista móvil del checkout premium con diseño adaptado y botones de PayPal optimizados para touch]]
+
+Características responsive:
+\begin{itemize}
+  \item Touch targets grandes (mínimo 44x44px) para botones.
+  \item Stack vertical de elementos en pantallas pequeñas.
+  \item Texto escalable y legible en dispositivos móviles.
+  \item Botones de PayPal adaptados al ancho de pantalla.
+  \item Modales ocupando alto completo en dispositivos pequeños.
+\end{itemize}
+
+\subsection{Características Generales de Diseño y Usabilidad}
+
+\begin{itemize}
+  \item Esquema de colores consistente: amarillo/dorado para premium, azul para básico.
+  \item Animaciones sutiles para feedback (shake en errores, pulse en éxitos, fade-in en modales).
+  \item Estados de carga claros con spinners y mensajes descriptivos.
+  \item Mensajes de error amigables y orientados a la solución.
+  \item Confirmaciones visuales para acciones críticas (pago exitoso, límite alcanzado).
+  \item Navegación intuitiva con breadcrumbs y botones de retroceso.
+  \item Accesibilidad: contraste WCAG 2.1 AA, navegación por teclado, ARIA labels.
+\end{itemize}

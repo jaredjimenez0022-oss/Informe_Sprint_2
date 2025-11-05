@@ -77,42 +77,44 @@ La plataforma digital para la comunidad de Tejarcillos continúa su desarrollo c
 \label{ProductBacklog}
 \end{longtable}
 
-
 \subsection{Bitácora de cambios}
-Documente en esta sección las decisiones que llevaron a la creación de nuevas historias, o la eliminación de historias ya analizadas. Detalle con cuidado todas las historias afectadas con su respectivo código, indicando por qué razón fue eliminada / agregadas a la pila.
 
-\section{Producto Mínimo Viable del Sprint 2}
-El MVP del Sprint 2 se centra en la monetización de la plataforma mediante la implementación de un sistema de usuarios premium y la integración de pagos con PayPal, además de corregir problemas críticos identificados en el Sprint 1 y agregar una sección informativa sobre la organización.
+Durante la planificación y ejecución del Sprint 2, no se realizaron cambios 
 
-Este segundo producto mínimo viable se enfoca en las siguientes áreas estratégicas:
 
+
+\subsubsection*{Historias modificadas}
+
+Durante la  ejecución del Sprint 2, no se hubo historias modificadas  
+
+
+\subsubsection*{Historias eliminadas}
+
+No se eliminaron historias durante este sprint. Todas las historias planificadas fueron completadas exitosamente.
+
+\subsubsection*{Decisiones técnicas relevantes}
 
 \begin{itemize}
-
-\item \textbf{Corrección de errores críticos del Sprint 1}: Resolución de problemas identificados en producción, incluyendo el filtro de búsqueda en biblioteca, límites de tamaño de archivos y el sistema de recuperación de contraseñas, mejorando la estabilidad general de la plataforma.
-
-\item \textbf{Sistema de usuarios premium}: Implementación de roles de usuario diferenciados (básico y premium) con límites de publicaciones y funcionalidades exclusivas para usuarios premium, estableciendo las bases para la sostenibilidad económica de la plataforma.
-
-\item \textbf{Integración de PayPal para pagos}: Desarrollo completo del flujo de pago mediante PayPal Sandbox, permitiendo a los usuarios realizar upgrades a membresías premium de manera segura y confiable, con procesamiento automático de transacciones.
-
-
-
-\item \textbf{Sección ``Acerca de`` informativa}: Creación de una sección básica en Frontend que muestre información importante sobre Komuness CR.
-
-\item \textbf{Sistema de límites y alertas}: Implementación de mecanismos que notifiquen a usuarios básicos cuando alcancen sus límites de publicaciones y les ofrezcan la opción de upgrade, creando un flujo natural de conversión a premium.
-
-\item \textbf{Validación de flujos de pago}: Pruebas exhaustivas del proceso completo de monetización, desde la detección de límites hasta la confirmación de pago y actualización automática del estado del usuario.
+    \item Se decidió usar PayPal Sandbox en lugar de cuentas reales de producción durante todo el Sprint 2 para evitar riesgos financieros durante desarrollo y pruebas.
+    
+    \item Las imágenes de la sección Acerca de se almacenan localmente (/public/uploads) en lugar de Digital Ocean Spaces para simplificar implementación. Esto se migrará a CDN en sprints futuros.
+    
+    \item El sistema de reintentos (RF016) se implementó como utilidad reutilizable (paymentRetry.ts) en lugar de código específico de PayPal, permitiendo su uso en futuras integraciones de pago.
+    
+    \item Se validó con el cliente que el límite inicial de 5 publicaciones para básicos y 10 para premium era adecuado, basándose en patrones de uso observados en Sprint 1.
 \end{itemize}
 
-Al finalizar este sprint, la plataforma contará con un sistema de monetización funcional que permitirá la sostenibilidad a largo plazo, manteniendo el acceso gratuito para usuarios básicos mientras ofrece beneficios adicionales mediante membresías premium, todo ello respaldado por una experiencia de pago segura y confiable mediante PayPal.
+%% PILA DEL SPRINT 2 %%
+
+%% PILA DEL SPRINT 2 %%
 
 \subsection{Pila de trabajo de la iteración 2}
 
-El equipo de desarrollo está compuesto por tres integrantes con dedicación de 12 horas semanales cada uno trabajando durante 4 semanas (20 días hábiles), totalizando 144 horas de capacidad al 100\%. Considerando un factor de productividad del 90\% para imprevistos y reuniones de coordinación, el presupuesto disponible es de 128 horas equivalentes a 32 puntos de historia para el Sprint 1.
+El equipo de desarrollo está compuesto por tres integrantes con dedicación de 12 horas semanales cada uno trabajando durante 4 semanas (20 días hábiles), totalizando 144 horas de capacidad al 100\%. Considerando un factor de productividad del 90\% para imprevistos y reuniones de coordinación, el presupuesto disponible es de 128 horas equivalentes a 32 puntos de historia para el \textbf{Sprint 2}.
 
 \begin{longtable}{|l|l|l|}
     \hline
-    \textbf{Miembro del equipo} & \textbf{Rol} & \textbf{Capacidad (puntos)} \\
+    \textbf{Miembro del equipo} & \textbf{Rol} & \textbf{Capacidad (puntos, 100\%)} \\
     \hline
     Fredrik Aburto Jiménez & Desarrollo Fullstack & 12 \\
     Angélica Díaz Barrios & Desarrollo Fullstack & 12 \\
@@ -125,9 +127,6 @@ El equipo de desarrollo está compuesto por tres integrantes con dedicación de 
     \caption{Resumen de capacidad de carga del equipo para la iteración 2}
 \end{longtable}
 
-%% PILA DEL SPRINT (ITERACIÓN) %%
-
-%% PILA DEL SPRINT 2 %%
 \begin{longtable}{|l||c|c|p{7cm}|l|}
 \multicolumn{5}{c}{Pila del \textbf{Sprint 2}} \\
 \hline\hline
@@ -138,23 +137,22 @@ El equipo de desarrollo está compuesto por tres integrantes con dedicación de 
 \hline\hline
 \endhead
 
-\textbf{RF011} & 1 & - & Por asignar & - \\
-\textbf{RF012} & 1 & - & Por asignar & - \\
-\textbf{RF013} & 2 & - & Por asignar & - \\
-\textbf{RF014} & 1 & - & Por asignar & - \\
-\textbf{RF015} & 3 & - & Por asignar & - \\
-\textbf{RF016} & 3 & - & Por asignar & - \\
-\textbf{RF017} & 3 & - & Por asignar & - \\
-\textbf{RF018} & 3 & - & Por asignar & - \\
-\textbf{RF019} & 3 & - & Por asignar & - \\
-\textbf{RF020} & 3 & - & Por asignar & - \\
-\textbf{RF021} & 2 & - & Por asignar & - \\
-\textbf{RNF003} & 2 & - & Por asignar & - \\
-\textbf{RNF004} & 3 & - & Por asignar & - \\
-\textbf{RNF005} & 2 & - & Por asignar & - \\
-
+\textbf{RF011} & 1 & 1 & Fredrik Aburto Jiménez & 2025-10-02 \\
+\textbf{RF012} & 1 & 1 & Andrés Salas Araya & 2025-10-01 \\
+\textbf{RF013} & 2 & 2 & Fredrik Aburto Jiménez & 2025-10-08 \\
+\textbf{RF014} & 1 & 1 & Andrés Salas Araya & 2025-10-03 \\
+\textbf{RF015} & 3 & 4 & Andrés Salas Araya & 2025-10-16 \\
+\textbf{RF016} & 3 & 3 & Fredrik Aburto Jiménez & 2025-10-23 \\
+\textbf{RF017} & 3 & 3 & Angélica Díaz Barrios & 2025-10-13 \\
+\textbf{RF018} & 3 & 3 & Fredrik Aburto Jiménez & 2025-10-17 \\
+\textbf{RF019} & 3 & 3 & Angélica Díaz Barrios & 2025-10-20 \\
+\textbf{RF020} & 3 & 3 & Angélica Díaz Barrios & 2025-10-23 \\
+\textbf{RF021} & 2 & 2 & Andrés Salas Araya & 2025-10-19 \\
+\textbf{RNF003} & 2 & 3 & Fredrik Aburto Jiménez & 2025-10-27 \\
+\textbf{RNF004} & 3 & 3 & Andrés Salas Araya & 2025-10-27 \\
+\textbf{RNF005} & 2 & 2 & Angélica Díaz Barrios & 2025-10-27 \\
 \hline
-\textbf{Total} & \textbf{32} & \textbf{-} & & \\
+\textbf{Total} & \textbf{32} & \textbf{34} & & \\
 \hline
 
 \caption{Pila de la Iteración 2. \textbf{CE:} Carga Estimada, \textbf{CR:} Carga Real.}
@@ -163,15 +161,96 @@ El equipo de desarrollo está compuesto por tres integrantes con dedicación de 
 \end{longtable}
 
 \subsection{Desempeño del equipo}
-Documente cualquier problema que se haya presentado durante el desarrollo. Describa las situaciones que se presentaron por las cuales fue necesario cambiar la pila de trabajo planificada (si hubieran).
 
-Incluya la gráfica de quemado e incorpore la siguiente información: Velocidad del equipo, carga estimada total, carga real total.
+El equipo trabajó de manera colaborativa durante 4 semanas (del 30 de septiembre al 24 de octubre de 2025), completando exitosamente todas las historias planificadas para el Sprint 2.
+
+\subsubsection*{Velocidad por integrante (CR)}
+
+\begin{itemize}
+    \item \textbf{Angélica Díaz Barrios:} 11 puntos
+    \item \textbf{Fredrik Aburto Jiménez:} 12 puntos
+    \item \textbf{Andrés Salas Araya:} 11 puntos
+\end{itemize}
+
+\subsubsection*{Problemas y desafíos enfrentados}
+
+Durante el desarrollo se presentaron las siguientes situaciones que impactaron la ejecución:
+
+\begin{itemize}
+    \item \textbf{Complejidad subestimada en RF015 (Webhooks):} La historia de webhooks de PayPal fue estimada en 3 puntos pero requirió 4 puntos reales. La verificación de firmas de webhook resultó más compleja de lo previsto, requiriendo investigación adicional de la documentación de PayPal y ajustes en la configuración del servidor para recibir peticiones externas en desarrollo.
+    
+    \item \textbf{Scope creep en RNF003 (Manual de usuario):} El manual de usuario fue estimado en 2 puntos pero requirió 3. Durante la redacción se identificó la necesidad de incluir capturas de pantalla detalladas del flujo de pago completo y casos de error, lo cual no se consideró en la estimación inicial.
+    
+ 
+    \item \textbf{Dependencias bloqueantes:} RF018 (Alertas de límites) dependía de la finalización de RF013 (Modelo usuario premium). Esto generó un pequeño retraso de 2 días, pero se compensó con trabajo paralelo en RF017 (Sección Acerca de).
+\end{itemize}
+
+\subsubsection*{Cambios en la pila de trabajo}
+
+
+\subsubsection*{Métricas del sprint}
+
+\begin{itemize}
+    \item \textbf{Velocidad del equipo:} 34 puntos completados en 4 semanas.
+    \item \textbf{Carga estimada total (CE):} 32 puntos.
+    \item \textbf{Carga real total (CR):} 34 puntos.
+    \item \textbf{Desviación:} +6.25\% (2 punto adicional).
+    \item \textbf{Tasa de completitud:} 100\% de historias finalizadas.
+    \item \textbf{Horas trabajadas:} 136 horas (vs. 128 horas planificadas = 90\% del presupuesto total de 144 horas).
+\end{itemize}
+
+\bigskip
+
+La siguiente gráfica de quemado  refleja el avance acumulado del sprint con respecto a la carga estimada:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Día} & \textbf{Tendencia} & \textbf{Real} \\ \hline
+0  & 32   & 34 \\ \hline
+1  & 30,4 & 34 \\ \hline
+2  & 28,8 & 34 \\ \hline
+3  & 27,2 & 33 \\ \hline
+4  & 25,6 & 32 \\ \hline
+5  & 24   & 31 \\ \hline
+6  & 22,4 & 31 \\ \hline
+7  & 20,8 & 31 \\ \hline
+8  & 19,2 & 29 \\ \hline
+9  & 17,6 & 29 \\ \hline
+10 & 16   & 29 \\ \hline
+11 & 14,4 & 26 \\ \hline
+12 & 12,8 & 26 \\ \hline
+13 & 11,2 & 26 \\ \hline
+14 & 9,6  & 22 \\ \hline
+15 & 8    & 19 \\ \hline
+16 & 6,4  & 14 \\ \hline
+17 & 4,8  & 14 \\ \hline
+18 & 3,2  & 14 \\ \hline
+19 & 1,6  & 8  \\ \hline
+20 & 0    & 0  \\ \hline
+\end{tabular}
+\caption{Tabla de referencia utilizada para el cálculo de la gráfica de quemado del Sprint 2.}
+\label{tab:burndown_sprint1}
+\end{table}
+\subsubsection*{Gráfica de quemado}
+
+
 
 % Gráfica de quemado
 \begin{figure}[H]
   \centering
-    \includegraphics[height= 10cm, width=15cm]{project/images/data-sync}
-  \caption{\textbf{IMAGE CAPTION}}
+    \includegraphics[height=10cm, width=15cm]{project/images/grafica.png}.
+  \caption{Gráfica de quemado del Sprint 2 mostrando progreso del equipo durante las 4 semanas de desarrollo}
+  \label{fig:burndown-sprint2}
 \end{figure}
 
-Si la carga estimada y la carga real difieren, explique porqué se da la diferencia.
+\subsubsection*{Explicación de diferencias entre carga estimada y real}
+
+La carga real (\textbf{34} puntos) superó ligeramente la carga estimada (\textbf{32} puntos) por las siguientes razones:
+
+
+
+A pesar de la desviación del 6.25\%, el equipo completó todas las historias dentro del plazo establecido, manteniendo alta calidad en los entregables. 
+
+
